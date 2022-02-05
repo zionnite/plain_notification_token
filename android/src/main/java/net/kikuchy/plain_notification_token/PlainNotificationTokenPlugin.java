@@ -19,16 +19,42 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
 
+
+import io.flutter.embedding.engine.plugins.FlutterPlugin;
+import io.flutter.plugin.common.BinaryMessenger;
+
 /**
  * PlainNotificationTokenPlugin
  */
-public class PlainNotificationTokenPlugin extends BroadcastReceiver implements MethodCallHandler {
+public class PlainNotificationTokenPlugin extends BroadcastReceiver implements MethodCallHandler, FlutterPlugin  {
     /**
      * Plugin registration.
      */
+    private Context context;
+    private MethodChannel methodChannel;
+    public PlainNotificationTokenPlugin() {}
+
     public static void registerWith(Registrar registrar) {
-        final MethodChannel channel = new MethodChannel(registrar.messenger(), "plain_notification_token");
-        channel.setMethodCallHandler(new PlainNotificationTokenPlugin(channel, registrar));
+        new PlainNotificationTokenPlugin().onAttached(registrar.context(), registrar.messenger());
+    }
+
+    @Override
+    public void onAttachedToEngine(FlutterPluginBinding binding) {
+        onAttached(binding.getApplicationContext(), binding.getBinaryMessenger());
+    }
+
+    @Override
+    public void onDetachedFromEngine(FlutterPluginBinding binding) {
+        context = null;
+        methodChannel.setMethodCallHandler(null);
+        methodChannel = null;
+
+    }
+
+    private void onAttached(Context applicationContext, BinaryMessenger messenger) {
+        this.context = applicationContext;
+        this.methodChannel = new MethodChannel(messenger, "plain_notification_token");
+        methodChannel.setMethodCallHandler(this);
     }
 
     static final String TAG = PlainNotificationTokenPlugin.class.getSimpleName();
