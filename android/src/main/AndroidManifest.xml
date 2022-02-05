@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   package="net.kikuchy.plain_notification_token">
+
     <application>
         <service
             android:name=".NewTokenReceiveService"
