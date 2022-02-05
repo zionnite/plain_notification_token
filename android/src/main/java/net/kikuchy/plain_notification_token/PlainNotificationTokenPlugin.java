@@ -68,7 +68,7 @@ public class PlainNotificationTokenPlugin extends BroadcastReceiver implements M
     }
 
     @Override
-    public void onMethodCall(final MethodCall call, final Result result) {
+    public void onMethodCall(@NonNull final MethodCall call, @NonNull final  Result result) {
         if (call.method.equals("getToken")) {
             FirebaseInstanceId.getInstance()
                     .getInstanceId()
